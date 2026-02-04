@@ -1,12 +1,9 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.10'
-	id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'com.sparta'
-version = '0.0.1-SNAPSHOT'
-description = 'Limited-Edition-Commerce-Platform-common'
+group = 'com.github.minsik0'
+version = '0.1.0'
 
 java {
 	toolchain {
@@ -20,23 +17,24 @@ repositories {
 
 dependencies {
 	// Lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.32'
+	annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
-	// Security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+	// Spring Web
+	implementation 'org.springframework:spring-web:6.1.6'
+
+	// Spring Security
+	implementation 'org.springframework.security:spring-security-core:6.3.1'
+	implementation 'org.springframework.security:spring-security-web:6.3.1'
 
 	// JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
-	// Web
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
 }
 
 tasks.named('test') {
