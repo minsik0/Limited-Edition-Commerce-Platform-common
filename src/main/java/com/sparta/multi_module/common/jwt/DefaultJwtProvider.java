@@ -15,16 +15,12 @@ import java.security.Key;
 import java.util.Date;
 import java.util.UUID;
 
-@Component
 public class DefaultJwtProvider implements JwtProvider {
 
     private final Key key;
     private final long accessTokenExpirationTime;
 
-    public DefaultJwtProvider(
-            @Value("${jwt.secret-key}") String secretKey,
-            @Value("${jwt.access-token-expiration-ms}") long accessTokenExpirationTime
-    ) {
+    public DefaultJwtProvider(String secretKey, long accessTokenExpirationTime) {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.accessTokenExpirationTime = accessTokenExpirationTime;
     }
@@ -42,18 +38,6 @@ public class DefaultJwtProvider implements JwtProvider {
                 .compact();
     }
 
-    private Claims parseClaims(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new BusinessException(ErrorCode.INVALID_TOKEN);
-        }
-    }
-
     @Override
     public UUID getUserId(String token) {
         return UUID.fromString(parseClaims(token).getSubject());
@@ -66,5 +50,17 @@ public class DefaultJwtProvider implements JwtProvider {
             throw new BusinessException(ErrorCode.INVALID_TOKEN);
         }
         return role;
+    }
+
+    private Claims parseClaims(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new BusinessException(ErrorCode.INVALID_TOKEN);
+        }
     }
 }
