@@ -37,27 +37,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
 
-            UUID userId = jwtProvider.getUserId(token);
-            String role = jwtProvider.getRole(token);
+            try {
+                UUID userId = jwtProvider.getUserId(token);
+                String role = jwtProvider.getRole(token);
 
-            AuthenticatedUser principal =
-                    new DefaultAuthenticatedUser(userId, role);
+                AuthenticatedUser principal =
+                        new DefaultAuthenticatedUser(userId, role);
 
-            List<GrantedAuthority> authorities =
-                    List.of(new SimpleGrantedAuthority("ROLE_" + role));
+                List<GrantedAuthority> authorities =
+                        List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-            UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            principal,
-                            null,
-                            authorities
-                    );
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                principal,
+                                null,
+                                authorities
+                        );
 
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request)
-            );
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } catch (Exception e) {
+                // 인증 실패 → context 비우고 그냥 다음 필터 진행
+                SecurityContextHolder.clearContext();
+            }
         }
 
         filterChain.doFilter(request, response);
