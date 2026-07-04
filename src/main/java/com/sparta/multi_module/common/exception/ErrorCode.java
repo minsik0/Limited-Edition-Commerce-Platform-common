@@ -41,6 +41,7 @@ public enum ErrorCode {
     ORDER_ACCESS_DENIED("ORDER_002", "주문에 대한 접근 권한이 없습니다."),
     ORDER_CANNOT_CANCEL("ORDER_003", "취소할 수 없는 주문 상태입니다."),
     INVALID_ORDER_STATUS("ORDER_004", "유효하지 않은 주문 상태입니다."),
+    PURCHASE_LIMIT_EXCEEDED("ORDER_005", "구매 한도를 초과했습니다."),
 
     // PAYMENT
     PAYMENT_NOT_FOUND("PAYMENT_001", "결제 정보를 찾을 수 없습니다"),
